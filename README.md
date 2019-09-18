@@ -3,12 +3,12 @@ Utilisez les données publiques de l'OpenFoodFacts
 
 1-	Définition du besoin du projet :
 1.1-	En programmation : 
-Code écrit en anglais, avec le langage python (orientée objet) et le module Tkinter (pour l’interface graphique)…, en respectant les bonnes pratiques de la PEP 8. Récupération de données de l’API de la base Open Food Facts, inséré dans une base de données MySQL. Utilisation d’un environnement virtuel (Python 3). Code versionner avec Git, et visible sur Github (https://github.com/EmilieM71/XXX.git). Programme sera standalone.
+Code écrit en anglais, avec le langage python (orientée objet) et le module Tkinter (pour l’interface graphique)…, en respectant les bonnes pratiques de la PEP 8. Le code est organisé à l'aide du modèle MVC, pour “Modèle, Vue, Contrôleur”. Les données sont récupérées sur l’API de la base Open Food Facts, et insérées dans une base de données MySQL. Utilisation d’un environnement virtuel (Python 3). Code versionner avec Git, et visible sur Github (https://github.com/EmilieM71/Projet-5-startup-Pur-Beurre). Programme sera standalone.
 
 1.2-	Le projet : 
 un programme qui propose des produits de substitutions plus sains par rapport à un produit sélectionnée. Le programme doit pouvoir enregistrer les produits de substitutions.
 Gestion du projet en mode agile : 
-https://trello.com/b/dZ1cvBKy/gestion-du-projet-pur-beurre
+https://trello.com/b/jMdXJwLw/pur-beurre
 
 2-	LES RECHERCHES ET LES PERSONAS
 Open Food Facts répertorie les produits alimentaires du monde entier, et a permis la création de plus de 100 applications telles que Date Limite, Yuka ou FoodVisor pour les plus utilisés et connus.
@@ -16,9 +16,11 @@ Open Food Facts répertorie les produits alimentaires du monde entier, et a perm
 
 3-	Algorithme
 3.1-	le diagramme des flux général
+https://github.com/EmilieM71/Projet-5-startup-Pur-Beurre/blob/master/Schemes/Diagramme%20de%20flux.png
 
 3.2-	Diagramme de flux détaillé
 S’authentifier : 
+https://github.com/EmilieM71/Projet-5-startup-Pur-Beurre/blob/master/Schemes/S'authentifier.png
 
 3.3-	Algorithmes utilisés
 
