@@ -1,5 +1,5 @@
 import requests
-from config.config_db import CATEGORIES
+# from config.config_db import CATEGORIES
 
 
 class ApiDataCollection:

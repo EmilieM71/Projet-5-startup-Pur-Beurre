@@ -3,4 +3,4 @@ from controller.app_launch import AppLaunch
 
 
 start = AppLaunch()
-AppLaunch.greeting(start)
+AppLaunch.starting(start)

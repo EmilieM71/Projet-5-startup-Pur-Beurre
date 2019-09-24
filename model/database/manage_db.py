@@ -1,59 +1,24 @@
 # ! / usr / bin / env python3
 # codage: utf-8
 
-# Import modules
+# Import
 from mysql import connector
 from mysql.connector import errorcode
 from config.config_db import HOST, USER, PASSWORD, DB_NAME
-from model.api.api_data_collection import ApiDataCollection
+# from model.api.api_data_collection import ApiDataCollection
 
 
 class ManageDatabase:
     """ class to manage the database
         - Connection to MySQL
+        - Connect database DB_NAME if exist, elif create DB
         - Create database
-
         - exit connection. """
 
     def __init__(self):
         self.cnx = None
-
-    def connection_mysql_db(self):
-        # Creating the object to load or update API data
-        data_api = ApiDataCollection()
-        # connection MySQL
-        config = {
-            'host': HOST,
-            'user': USER,
-            'password': PASSWORD,
-            'database': DB_NAME
-        }
-
-        try:
-            # connection to the MySQL database
-            self.cnx = connector.connect(**config)
-            print("Connection to the successful database")
-            # Updated data
-            print("Loading API data into the database")
-            ApiDataCollection.updated_data(data_api)
-
-        except connector.Error as err:
-            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-                print("Something is wrong with your user name or password")
-            elif err.errno == errorcode.ER_BAD_DB_ERROR:
-                print("Database does not exist")
-                print("Creating the database")
-                self.create_db()
-                print("The database is created")
-                print("loading API data into the database")
-                ApiDataCollection.download_data_api(data_api)
-                print("loading completed")
-            else:
-                print(err)
-        # finally:
-        #     # Creating a MySQL cursor
-        #     self.cursor = self.cnx.cursor()
-        #     return self.cursor
+        self.cursor = None
+        self.connect_db_name = False
 
     def connection_mysql(self):
         # connection MySQL
@@ -63,33 +28,52 @@ class ManageDatabase:
             'password': PASSWORD,
         }
         try:
-            # connection to the MySQL database
+            # connection to the MySQL
             self.cnx = connector.connect(**config)
+            print("You are connected to MySQL")
 
         except connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                 print("Something is wrong with your user name or password")
 
-    def create_db(self):
+    def connect_db(self, cursor):
+        self.cursor = cursor
+        try:
+            self.cursor.execute("USE {}".format(DB_NAME))
+            print("You are connected to 'PurBeurre' Database")
+        except connector.Error:
+            print("Database {} does not exists.".format(DB_NAME))
+            # print(err)
+            self.connect_db_name = False
+        else:
+            self.connect_db_name = True
+        return self.connect_db_name
+
+    def create_db(self, cursor):
         """ Create database if not exist"""
         try:
-            # connection to the MySQL
-            self.connection_mysql()
-            # Creating database
-            script_sql = open('documentation/MPD.sql')
-            script_sql_read = script_sql.read()
-            cursor = self.cnx.cursor(script_sql_read)
-            script_sql.close()
-            try:
-                cursor.execute("USE {}".format(DB_NAME))
-            except connector.Error as err:
-                print("Database {} does not exists.".format(DB_NAME))
-                return
+            self.cursor = cursor
+            # Opening the file containing the SQL script
+            sql_file = open("documentation/MPD.sql", 'r')
+            sql_text = sql_file.read()
+            sql_stmts = sql_text.split(';')
+            for s in sql_stmts:
+                print(s)
+                cursor.execute(s)
+            self.cnx.commit()
 
-        except FileNotFoundError:
-            print('Fichier introuvable.')
-        except IOError:
-            print('Erreur d\'ouverture.')
+        except connector.Error as err:
+            print("Failed creating database: {}".format(err))
+            exit(1)
+
+    # def find_if_database_contains_data(self, cursor):
+    #     query = " SELECT name FROM category "
+    #
+    #     self.cursor.execute(query)
+    #
+    #     # for name in self.cursor:
+    #     #     print("{}".format(name))
 
     def __exit__(self):
         self.cnx.close()
+        print("")
