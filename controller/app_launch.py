@@ -1,5 +1,6 @@
 from model.database.manage_db import ManageDatabase
 from model.api.api_data_collection import ApiDataCollection
+from model.database.food import Food
 # from view.view_home_connect import ViewHomeConnect
 
 
@@ -8,9 +9,11 @@ class AppLaunch:
     def __init__(self):
         self.api = ApiDataCollection()
         self.db = ManageDatabase()
-        self.my_cursor = None
+        self.cursor = None
+        self.cnx = None
 
     def starting(self):
+        # Opening the welcome window
         print("To use the app you need to have to install MySQL version 8, and"
               " create user name :'student_OC', host: 'localhost', "
               "password: '123abc'")
@@ -25,8 +28,25 @@ class AppLaunch:
             if enter_user == 1:
                 enter_user_invalid = False
                 print("App launch")
-                # search if the database exists
-                self.search_if_the_database_exists()
+                # search if the database exists and create if not exist
+                self.db.connection_mysql()
+                self.cnx = self.db.cnx
+                cursor = self.cnx.cursor()
+                # find the presence of data in the food table
+                food = Food(self.cnx, cursor)
+                food.search_if_data()
+                # if presence of data : update data
+                if food.presence_food:
+                    print("Updating data from the API")
+                    pass
+                # else download data to REST d'API Open Food Facts and
+                # insert data into the corresponding tables
+                else:
+                    cursor.close()
+                    self.cnx.close()
+                    print("Please wait while loading data to REST d'API "
+                          "Open Food Facts and insert data into database")
+                    self.db.insert_api_data_into_tables()
 
             elif enter_user == 2:
                 enter_user_invalid = False
@@ -36,33 +56,29 @@ class AppLaunch:
                 print("Enter invalid. You have to enter '1' to start the app "
                       "or '2' to leave.")
 
-    def search_if_the_database_exists(self):
-        # 1- Connect to mysql
-        self.db.connection_mysql()
-        # 2- Create my cursor
-        self.my_cursor = self.db.cnx.cursor()
-        # 3- Connecting to the database "PurBeurre"
-        self.db.connect_db(self.my_cursor)
-        # If the database does not exist
-        if not self.db.connect_db_name:
-            self.if_database_not_exist()
-            return self.my_cursor
-        else:
-            self.if_database_exist()
+    def presence_data(self):
 
-    def if_database_exist(self):
+        self.data = False
+        return self.data
+
+    def if_database_exist(self, cnx):
         # update date to REST d'API Open Food Facts and insert data into
         # the corresponding tables"""
+        print(cnx)
         self.api.updated_data()
 
-    def if_database_not_exist(self):
+    def if_database_not_exist(self, cnx, cursor):
         # create the 'PurBeurre' database from the MPD.sql file
-        # (in the 'documentation' packing)
-        self.db.create_db(self.my_cursor)
-        self.db.connect_db(self.my_cursor)
+        self.cnx = cnx
+        self.cursor = cursor
+        self.db.create_db(self.cnx)
+        self.cnx = cnx
+        self.cursor = cursor
         # Download data to REST d'API Open Food Facts and insert data into
-        # the corresponding tables"""
-        self.api.download_data_api()
+        # the corresponding tables
+        print("connection bdd avant ajout données dans table", self.cnx,
+              "cursor : ", self.cursor)
+        self.db.insert_api_data_into_the_corresponding_tables(self.cnx, self.cursor)
 
     # @staticmethod
     # def connection_window_opening():
