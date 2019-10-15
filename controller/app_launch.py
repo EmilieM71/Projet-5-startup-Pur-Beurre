@@ -1,6 +1,7 @@
 from model.database.manage_db import ManageDatabase
 from model.api.api_data_collection import ApiDataCollection
 from model.database.food import Food
+from model.database.users import Users
 # from view.view_home_connect import ViewHomeConnect
 
 
@@ -47,6 +48,7 @@ class AppLaunch:
                     print("Please wait while loading data to REST d'API "
                           "Open Food Facts and insert data into database")
                     self.db.insert_api_data_into_tables()
+                self.application_connection(self.cnx)
 
             elif enter_user == 2:
                 enter_user_invalid = False
@@ -56,30 +58,41 @@ class AppLaunch:
                 print("Enter invalid. You have to enter '1' to start the app "
                       "or '2' to leave.")
 
-    def presence_data(self):
+    def application_connection(self, cnx):
+        # Opening the welcome window
+        print("To use the app you must login or create an account")
+        print("Enter 1 to login to your user account")
+        print("Enter 2 to create an account")
 
-        self.data = False
-        return self.data
+        enter_user_invalid = True
 
-    def if_database_exist(self, cnx):
-        # update date to REST d'API Open Food Facts and insert data into
-        # the corresponding tables"""
-        print(cnx)
-        self.api.updated_data()
-
-    def if_database_not_exist(self, cnx, cursor):
-        # create the 'PurBeurre' database from the MPD.sql file
-        self.cnx = cnx
-        self.cursor = cursor
-        self.db.create_db(self.cnx)
-        self.cnx = cnx
-        self.cursor = cursor
-        # Download data to REST d'API Open Food Facts and insert data into
-        # the corresponding tables
-        print("connection bdd avant ajout données dans table", self.cnx,
-              "cursor : ", self.cursor)
-        self.db.insert_api_data_into_the_corresponding_tables(self.cnx, self.cursor)
-
+        while enter_user_invalid:
+            enter_user = int(
+                input("Enter the number that matches your choice : "))
+            if enter_user == 1:
+                enter_user_invalid = False
+                print("login")
+                pseudo_user = input("Enter your pseudo : ")
+                print(pseudo_user)
+                password_user = input("Enter your password : ")
+            elif enter_user == 2:
+                enter_user_invalid = False
+                print("create a user account")
+                email_user = input("Enter your Email : ")
+                pseudo_user = input("Enter your pseudo : ")
+                password_user = input("Enter your password : ")
+                confirm_password_user = input("confirm your password : ")
+                # if 'password_user' corresponds to 'confirm_password_user'
+                if password_user == confirm_password_user:
+                    cursor = self.cnx.cursor()
+                    users = Users(cnx, cursor)
+                    # Create an account for the new user
+                    users.create_user(email_user, pseudo_user, password_user)
+                    # send a confirmation email for the creation of the account
+                    pass
+            else:
+                print("Enter invalid. You have to enter '1' to login "
+                      "or '2' to create a user account.")
     # @staticmethod
     # def connection_window_opening():
     #     cnx_window = ViewHomeConnect()

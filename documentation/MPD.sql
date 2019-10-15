@@ -35,8 +35,8 @@ CREATE TABLE food (
 CREATE TABLE user (
                 id INT AUTO_INCREMENT NOT NULL,
                 e_mail VARCHAR(255) NOT NULL,
-                password VARCHAR(20) NOT NULL,
                 pseudo VARCHAR(255) NOT NULL,
+                password VARCHAR(20) NOT NULL,
                 PRIMARY KEY (id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
