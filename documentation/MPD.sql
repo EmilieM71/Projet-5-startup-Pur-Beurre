@@ -24,10 +24,11 @@ CREATE TABLE brand (
 
 -- creating the table `food`
 CREATE TABLE food (
-                id INT AUTO_INCREMENT NOT NULL,
+                id INT NOT NULL,
                 name VARCHAR(500) NOT NULL UNIQUE,
                 nutriscore VARCHAR(1),
                 url VARCHAR(255),
+                last_modified DATE,
                 PRIMARY KEY (id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -67,10 +68,10 @@ CREATE TABLE category_food (
 
 -- creating the table `user_food`
 CREATE TABLE user_food (
-                id_food INT NOT NULL,
                 id_user INT NOT NULL,
+                id_food INT NOT NULL,
                 id_substitute INT NOT NULL,
-                PRIMARY KEY (id_food, id_user, id_substitute)
+                PRIMARY KEY (id_user, id_food, id_substitute)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE food_brand ADD CONSTRAINT brands_food_brands_fk

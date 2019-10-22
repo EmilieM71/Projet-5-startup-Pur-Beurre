@@ -1,5 +1,5 @@
+from model.view.model import ViewModel
 from tkinter import *
-from tkinter import font
 
 
 class ViewHomeConnect:
@@ -12,9 +12,9 @@ class ViewHomeConnect:
         self.window.minsize(480, 480)
         # self.window.iconbitmap(" logo.ico ")
         self.window.config(background='white')
-
         # Create frame in window
         self.frame = Frame(self.window, bg='white')
+        self.model = ViewModel(self.frame)
 
         # creating window components
         self.create_widgets()
@@ -27,52 +27,49 @@ class ViewHomeConnect:
 
         :rtype:
         """
-        self.create_title()
-        self.create_subtitle(" Se connecter ", 1)
-        self.create_line(2)
-        self.create_label_entry(" Pseudo ", 3)
-        self.create_label_entry(" Password ", 5)
-        self.create_button(2, " se connecter ", 20, '#ADD0EC', "white", 7,
-                           False, self.login())
-        self.create_button(0, " Mot de passe oublié ", 10, "white", 'blue',
-                           8, True, self.forgotten_password())
-        self.create_line(9)
-        self.create_subtitle(" Nouvel utilisateur ", 10)
-        self.create_button(2, " Créer un compte ", 20, '#ADD0EC', "white", 11,
-                           False, self.create_account())
-
-    def create_title(self):
-        label_title = Label(self.frame, text=" Bienvenue ",
-                            font=("Arial", 40), bg='white', fg='#ADD0EC')
-        label_title.grid(row=0, sticky='w')
-
-    def create_subtitle(self, text, row):
-        label_subtitle = Label(self.frame, text=text, justify=LEFT,
-                               font=("Arial", 20), bg='white', fg='black')
-        label_subtitle.grid(row=row, sticky='w')
-
-    def create_line(self, row):
-        canvas = Canvas(self.frame, bd=0, highlightthickness=0,
-                        background="white", height=20)
-        canvas.create_line((10, 10), (370, 10), fill='#ADD0EC', width=2)
-        canvas.grid(row=row, sticky='w')
-
-    def create_label_entry(self, label_text, label_row):
-        label = Label(self.frame, text=label_text, font=("Arial", 15),
-                      bg='white', fg='black')
-        label.grid(row=label_row, column=0, sticky='w')
-        entry = Entry(self.frame, font=("Arial", 20), bg='white', fg='black')
-        entry.grid(row=(label_row + 1), sticky='w')
-
-    def create_button(self, bd, text, font_size, bg, fg, row, underline,
-                      command):
-        button = Button(self.frame, bd=bd, text=text,
-                        font=("Arial", font_size), bg=bg, fg=fg,
-                        command=command)
-        button.grid(row=row, sticky='w', pady=20)
-        f = font.Font(button, button.cget("font"))
-        f.configure(underline=underline)
-        button.configure(font=f)
+        # create title : (text, font_size, bg, fg, row, sticky)
+        self.model.create_title(" Bienvenue ", ("Arial", 40), 'white',
+                                '#ADD0EC', 0, 'w')
+        # create subtitle : (text, justify, font_size, bg, fg, row, sticky)
+        self.model.create_subtitle(" Se connecter ", 'LEFT', ("Arial", 20),
+                                   'white', 'black', 1, 'w')
+        # create line : (bd, highlightthickness, bg, height,
+        #                     x0, y0, x1, y1, fill, width, row, sticky)
+        self.model.create_line(0, 0, "white", 20, 10, 10, 370, 10, '#ADD0EC',
+                               2, 2, 'w')
+        # create label and entry (label_text, font_size_label, bg_label,
+        # fg_label, label_row, column_lable, sticky_label,
+        # font_size_entry, bg_entry, fg_entry, column_entry, sticky_entry)
+        self.model.create_label_entry(" Pseudo ", ("Arial", 15), 'white',
+                                      'black', 3, 0, 'w', ("Arial", 20),
+                                      'white', 'black', 0, 'w')
+        # create label and entry (label_text, font_size_label, bg_label,
+        # fg_label, label_row, column_lable, sticky_label,
+        # font_size_entry, bg_entry, fg_entry, column_entry, sticky_entry)
+        self.model.create_label_entry(" Password ", ("Arial", 15), 'white',
+                                      'black', 5, 0, 'w', ("Arial", 20),
+                                      'white', 'black', 0, 'w')
+        # create button : (bd, text, font_size, bg, fg, command, row,
+        #                       sticky, pady, underline)
+        self.model.create_button(2, " se connecter ", ("Arial", 20), '#ADD0EC',
+                                 "white", self.login(), 7, 'w', 20, False)
+        # create button : (bd, text, font_size, bg, fg, command, row,
+        #                       sticky, pady, underline)
+        self.model.create_button(0, " Mot de passe oublié ", ("Arial", 10),
+                                 "white", 'blue', self.forgotten_password(),
+                                 8, 'w', 20, True)
+        # create line : (bd, highlightthickness, bg, height,
+        #                     x0, y0, x1, y1, fill, width, row, sticky)
+        self.model.create_line(0, 0, "white", 20, 10, 10, 370, 10, '#ADD0EC',
+                               2, 9, 'w')
+        # create subtitle : (text, justify, font_size, bg, fg, row, sticky)
+        self.model.create_subtitle(" Nouvel utilisateur ", 'LEFT',
+                                   ("Arial", 20), 'white', 'black', 10, 'w')
+        # create button : (bd, text, font_size, bg, fg, command, row,
+        #                       sticky, pady, underline)
+        self.model.create_button(2, " Créer un compte ", ("Arial", 20),
+                                 '#ADD0EC', "white", self.create_account(),
+                                 11, 'w', 20, False)
 
     def login(self):
         pass
@@ -82,8 +79,3 @@ class ViewHomeConnect:
 
     def create_account(self):
         pass
-
-
-# afficher
-home_window = ViewHomeConnect()
-home_window.window.mainloop()
